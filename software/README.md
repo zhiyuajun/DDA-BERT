@@ -126,5 +126,5 @@ If you encounter the following errors while running in non-Docker mode:
 	FileNotFoundError: [Errno 2] No such file or directory: '/xxx/sage/linux_sage'
 	FileNotFoundError: [Errno 2] No such file or directory: '/xxx/FragPipe22_0/philosopher-v5.1.1'
    ```
-Please verify that the required folders for the external programs exist in the current working directory. 
-If any folders are missing, you can either switch to the correct working directory or copy the necessary files into the current directory.
+Please check that the required folders exist in the current working directory. If they are missing, either switch to the correct working directory or copy the required files into the current directory:
+
