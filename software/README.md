@@ -30,7 +30,7 @@ It is strongly recommended to install DDA-BERT in an isolated Conda environment.
 #### Prerequisites
 
 #### Step 1. Download jdk11 from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SOFTWARE/DDA-BERT/jdk-11.0.26.zip), unzip and move to project root directory.
-> **⚠️Note**: This project was built using **FragPipe v22**, which includes the following core components: **MSFragger v4.1**, **Philosopher v5.1.1**, **diaTracer v1.1.5**, **IonQuant v1.10.27**. If you're using a different version of FragPipe, make sure to download compatible versions of these tools and properly configure your environment to ensure smooth execution of the analysis pipeline.
+> **⚠️Note**: This project was built using **FragPipe v22.0**, which includes the following core components: **MSFragger v4.1**, **Philosopher v5.1.1**, **diaTracer v1.1.5**, **IonQuant v1.10.27**. If you're using a different version of FragPipe, make sure to download compatible versions of these tools and properly configure your environment to ensure smooth execution of the analysis pipeline.
 
 You can download FragPipe from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SOFTWARE/DDA-BERT/FragPipe22_0.zip) with the following core components.
 
@@ -117,13 +117,14 @@ The examples below illustrate how to run the container by mounting a local direc
    ```
 In this example, the local directory /data/DDA-BERT is mounted into the container and used as the working directory for input and output files.
 
-### ⚠️Note
-> DDA-BERT relies on several external programs (e.g., JDK-11.0.26, FragPipe22_0, and Sage). In the Docker version, these dependencies are placed in the project's root directory (/app) by default. 
-Make sure to run the program in the default directory (/app) and avoid changing the execution directory.
+### ⚠️Important Notes
+> DDA-BERT relies on several external programs (e.g., Java, FragPipe, and Sage). In the Docker version, these dependencies are already included in the project's root directory (**/app**) by default. 
+Be sure to execute the program from the default directory (**/app**) and avoid changing the execution directory.
 
-If you encounter the following errors while running in non-Docker mode, please verify that the required folders exist in the current working directory. 
-If the folders are missing, either switch the working directory of the program or copy the necessary files into the current directory:
+If you encounter the following errors while running in non-Docker mode:
    ```bash
 	FileNotFoundError: [Errno 2] No such file or directory: '/xxx/sage/linux_sage'
 	FileNotFoundError: [Errno 2] No such file or directory: '/xxx/FragPipe22_0/philosopher-v5.1.1'
    ```
+Please verify that the required folders for the external programs exist in the current working directory. 
+If any folders are missing, you can either switch to the correct working directory or copy the necessary files into the current directory.
