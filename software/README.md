@@ -116,3 +116,13 @@ The examples below illustrate how to run the container by mounting a local direc
    docker run --gpus all --rm -v /home/user/DDA-BERT:/data guomics2017/dda-bert:v3.4 assess --mzml-paths=/data/example.mzML --fasta=/data/example.fasta --output=/data/out
    ```
 In this example, the local directory /home/user/DDA-BERT is mounted into the container and used as the working directory for input and output files.
+
+> **⚠️Note**: DDA-BERT relies on several external programs (e.g., JDK-11.0.26, FragPipe22_0, and Sage). In the Docker version, these dependencies are placed in the project's root directory (/app) by default. 
+Make sure to run the program in the default directory (/app) and avoid changing the execution directory.
+
+If you encounter the following errors while running in non-Docker mode, please verify that the required folders exist in the current working directory. 
+If the folders are missing, either switch the working directory of the program or copy the necessary files into the current directory:
+   ```bash
+	FileNotFoundError: [Errno 2] No such file or directory: '/xxx/sage/linux_sage'
+	FileNotFoundError: [Errno 2] No such file or directory: '/xxx/FragPipe22_0/philosopher-v5.1.1'
+   ```
