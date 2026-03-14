@@ -20,7 +20,6 @@ df_hela <- data %>%
     )
   )
 
-
 df <- pivot_longer(df_hela, cols = starts_with(c("AlphaPept","AlphaPeptDeep","MS2Rescore","Sage","FragPipe (MSBooster)","DDA-BERT")), 
                    names_to = c("Tool"), 
                    names_pattern = "(.*)", 
@@ -34,14 +33,13 @@ data_summary_stats <- data_filtered %>%
   summarise(
     mean_PSMs = mean(PSMs),
     sd_PSMs = sd(PSMs)
-  )%>%
+  ) %>%
   mutate(Tool = factor(Tool, levels = c("AlphaPept","AlphaPeptDeep","MS2Rescore","Sage","FragPipe (MSBooster)","DDA-BERT")))
-
 
 tool_colors <- c( 
   "AlphaPept"              = "#7A1A24",
   "AlphaPeptDeep"          = "#FDAE61",
-  "MS2Rescore"                = "#4575B4",
+  "MS2Rescore"             = "#4575B4",
   "Sage"                   = "#762A83",
   "FragPipe (MSBooster)"   = "#1A9850",
   "DDA-BERT"               = "#D73027"
@@ -50,41 +48,51 @@ tool_colors <- c(
 data_summary_stats <- data_summary_stats %>%
   mutate(Tool = factor(Tool, levels = names(tool_colors)))
 
+# Plotting with scatter points and error bars
 ggplot(data_summary_stats, aes(x = sample_type, y = mean_PSMs, fill = Tool)) +
-  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
-  geom_errorbar(
-    aes(ymin = mean_PSMs - sd_PSMs, ymax = mean_PSMs + sd_PSMs), 
-    position = position_dodge(0.7), width = 0.2
-  ) +
-  labs(
-    y = "# PSMs at 1% FDR",
-    x = "",
-    fill = "Tool"
-  ) +
-  theme_minimal() +
-  scale_fill_manual(values = tool_colors) +
-  theme(
-    legend.position = "right",
-    panel.grid = element_blank(), 
-    axis.line = element_line(color = "black"),
-    axis.ticks = element_line(color = "black"),
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-    axis.text.y = element_text(size = 10),
-    axis.title.y = element_text(size = 10)
-  ) +
-  scale_y_continuous(
-    breaks = seq(0, 12000, by = 2000), 
-    labels = c("0", "2000", "4000", "6000", "8000", "10000", "12000"), 
-    limits = c(0, 12000),
-    expand = c(0, 0)
-  )
+    geom_bar(stat = "identity", position = "dodge", width = 0.7) +
+    geom_errorbar(
+        aes(ymin = mean_PSMs - sd_PSMs, ymax = mean_PSMs + sd_PSMs), 
+        position = position_dodge(0.7), width = 0.2
+    ) +
+    geom_point(
+        data = data_filtered, aes(x = sample_type, y = PSMs, color = Tool),
+        position = position_jitterdodge(jitter.width = 0.3, dodge.width = 0.7), 
+        size = 0.3, alpha = 1
+    ) +
+    labs(
+        y = "# PSMs at 1% FDR",
+        x = "",
+        fill = "Tool",
+        color = "Tool"
+    ) +
+    theme_minimal() +
+    scale_fill_manual(values = tool_colors) +
+    scale_color_manual(values = tool_colors) +
+    theme(
+        legend.position = "none",
+        panel.grid = element_blank(), 
+        axis.line = element_line(color = "black"),
+        axis.ticks = element_line(color = "black"),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+        axis.text.y = element_text(size = 10),
+        axis.title.y = element_text(size = 10)
+    ) +
+    scale_y_continuous(
+        breaks = seq(0, 10000, by = 2000), 
+        labels = c("0", "2000", "4000", "6000", "8000", "10000"), 
+        limits = c(0, 10000),
+        expand = c(0, 0)
+    )
 
-ggsave(filename = "C:\\DDA-BERT\\DDA-BERT_0105\\main_figure\\fig5_trace_sample_PSMs_barplot.pdf", 
+
+# Save the plot
+ggsave(filename = "C:\\DDA-BERT\\DDA-BERT_0105\\main_figure\\fig5_trace_sample_PSMs_barplot_with_points.pdf", 
        plot = last_plot(),
        device = "pdf",
        width = 4,
        height = 4, 
-       units = "in") 
+       units = "in")
 
 
 
@@ -140,6 +148,11 @@ ggplot(data_summary_stats, aes(x = sample_type, y = mean_PSMs, fill = Tool)) +
     aes(ymin = mean_PSMs - sd_PSMs, ymax = mean_PSMs + sd_PSMs), 
     position = position_dodge(0.7), width = 0.2
   ) +
+  geom_point(
+    data = data_filtered, aes(x = sample_type, y = PSMs, color = Tool),
+    position = position_jitterdodge(jitter.width = 0.3, dodge.width = 0.7), 
+    size = 2, alpha = 1
+  ) +
   labs(
     y = "# peptides at 1% FDR",
     x = "",
@@ -147,8 +160,9 @@ ggplot(data_summary_stats, aes(x = sample_type, y = mean_PSMs, fill = Tool)) +
   ) +
   theme_minimal() +
   scale_fill_manual(values = tool_colors) +
+  scale_color_manual(values = tool_colors) +
   theme(
-    legend.position = "right",
+    legend.position = "none",  # Remove the legend
     panel.grid = element_blank(), 
     axis.line = element_line(color = "black"),
     axis.ticks = element_line(color = "black"),
@@ -157,11 +171,12 @@ ggplot(data_summary_stats, aes(x = sample_type, y = mean_PSMs, fill = Tool)) +
     axis.title.y = element_text(size = 10)
   ) +
   scale_y_continuous(
-    breaks = seq(0, 6000, by = 1000), 
-    labels = c("0", "1000", "2000", "3000", "4000", "5000",'6000'), 
-    limits = c(0, 6000),
+    breaks = seq(0, 5000, by = 1000), 
+    labels = c("0", "1000", "2000", "3000", "4000", "5000"), 
+    limits = c(0, 5000),
     expand = c(0, 0)
   )
+
 
 ggsave(filename = "C:\\DDA-BERT\\DDA-BERT_0105\\main_figure\\fig5_trace_sample_Peptides_barplot.pdf", 
        plot = last_plot(),
@@ -316,8 +331,14 @@ p <- ggplot(df_long, aes(x = Tool, y = peptide_num, fill = Tool)) +
     geom = "errorbar",
     width = 0.2
   ) +
+  geom_point(
+    aes(x = Tool, y = peptide_num, color = Tool),
+    position = position_jitterdodge(jitter.width = 0.3, dodge.width = 0.6), 
+    size = 0.3, alpha = 1
+  ) +
   facet_wrap(~ dataset, ncol = 1, scales = "free_y") +
   scale_fill_manual(values = tool_colors) +
+  scale_color_manual(values = tool_colors) +
   labs(
     x = NULL,
     y = "# peptides at 1% FDR"
@@ -330,9 +351,10 @@ p <- ggplot(df_long, aes(x = Tool, y = peptide_num, fill = Tool)) +
     axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
     axis.text.y = element_text(size = 10),
     axis.title.y = element_text(size = 11),
-    legend.position = "none",
+    legend.position = "none",  # Remove the legend
     panel.border = element_rect(color = "black", fill = NA)
   )
+
 
 ggsave("C:\\DDA-BERT\\DDA-BERT_0105\\main_figure\\main_figure\\fig5_single-cell_peptide_num.pdf", p,
        width = 4, height = 4, units = "in")
