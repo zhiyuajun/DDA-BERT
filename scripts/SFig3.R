@@ -32,6 +32,16 @@ df_long <- df %>%
 
 df_long <- df_long %>%
   filter(! is.na(dataset))
+  
+df_long$dataset <- recode(df_long$dataset,
+                          "human" = "Homo sapiens", "fruit_fly" = "Drosophila melanogaster", 
+						  "Arabidopsis" = "Arabidopsis thaliana", 
+						  "yeast" = "Saccharomyces cerevisiae"                         
+)
+
+df_long$dataset <- factor(df_long$dataset, 
+                          levels = c("Homo sapiens", "Drosophila melanogaster", 
+                                     "Arabidopsis thaliana", "Saccharomyces cerevisiae"))
 
 data_summary_stats <- df_long %>%
   group_by(dataset, Tool) %>%
@@ -48,7 +58,6 @@ data_summary_stats <- df_long %>%
     )
   )
 
-
 tool_colors <- c( 
   "AlphaPept"              = "#7A1A24",
   "AlphaPeptDeep"          = "#FDAE61",
@@ -60,21 +69,25 @@ tool_colors <- c(
 
 
 data_summary_stats <- data_summary_stats %>%
-  filter(dataset %in% c("human", "fruit_fly", "Arabidopsis", "yeast"))
+  filter(dataset %in% c("Homo sapiens", "Drosophila melanogaster", "Arabidopsis thaliana", "Saccharomyces cerevisiae"))
 
-ggplot(data_summary_stats, aes(x = Tool, y = mean_Proteins, fill = Tool)) +
+ggplot(data_summary_stats, aes(x = Tool, y = mean_Proteins, fill = Tool)) + 
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_errorbar(
     aes(ymin = mean_Proteins - sd_Proteins, ymax = mean_Proteins + sd_Proteins),
     position = position_dodge(0.7), width = 0.2
   ) +
+  geom_point(data = df_long, aes(x = Tool, y = Proteins, color = Tool), 
+             position = position_jitter(width = 0.2, height = 0), 
+             size = 0.3, alpha = 1) +
   facet_wrap(~ dataset, nrow = 2, scales = "free_y") + 
   labs(
-    y = "# protein groups",
+    y = "# protein groups at 1% FDR",
     x = NULL,
     fill = "Tool"
   ) +
   scale_fill_manual(values = tool_colors) +
+  scale_color_manual(values = tool_colors) +
   scale_y_continuous(
     expand = expansion(mult = c(0, 0.05))
   ) +
@@ -82,8 +95,8 @@ ggplot(data_summary_stats, aes(x = Tool, y = mean_Proteins, fill = Tool)) +
   theme(
     strip.text = element_text(face = "italic", size = 12),
     strip.background = element_blank(),
-    panel.border = element_rect(color = "black", fill = NA),#, linewidth = 0.6),
-    legend.position = "right",
+    panel.border = element_rect(color = "black", fill = NA),
+    legend.position = "none",
     panel.grid = element_blank(),
     axis.line = element_line(color = "black"),
     axis.ticks = element_line(color = "black"),

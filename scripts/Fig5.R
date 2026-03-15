@@ -47,44 +47,45 @@ tool_colors <- c(
 
 data_summary_stats <- data_summary_stats %>%
   mutate(Tool = factor(Tool, levels = names(tool_colors)))
+   
+data_summary_stats$Tool <- factor(data_summary_stats$Tool, levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
+data_filtered$Tool <- factor(data_filtered$Tool, levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
 
-# Plotting with scatter points and error bars
 ggplot(data_summary_stats, aes(x = sample_type, y = mean_PSMs, fill = Tool)) +
-    geom_bar(stat = "identity", position = "dodge", width = 0.7) +
-    geom_errorbar(
-        aes(ymin = mean_PSMs - sd_PSMs, ymax = mean_PSMs + sd_PSMs), 
-        position = position_dodge(0.7), width = 0.2
-    ) +
-    geom_point(
-        data = data_filtered, aes(x = sample_type, y = PSMs, color = Tool),
-        position = position_jitterdodge(jitter.width = 0.3, dodge.width = 0.7), 
-        size = 0.3, alpha = 1
-    ) +
-    labs(
-        y = "# PSMs at 1% FDR",
-        x = "",
-        fill = "Tool",
-        color = "Tool"
-    ) +
-    theme_minimal() +
-    scale_fill_manual(values = tool_colors) +
-    scale_color_manual(values = tool_colors) +
-    theme(
-        legend.position = "none",
-        panel.grid = element_blank(), 
-        axis.line = element_line(color = "black"),
-        axis.ticks = element_line(color = "black"),
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-        axis.text.y = element_text(size = 10),
-        axis.title.y = element_text(size = 10)
-    ) +
-    scale_y_continuous(
-        breaks = seq(0, 10000, by = 2000), 
-        labels = c("0", "2000", "4000", "6000", "8000", "10000"), 
-        limits = c(0, 10000),
-        expand = c(0, 0)
-    )
-
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) + 
+  geom_errorbar(
+    aes(ymin = mean_PSMs - sd_PSMs, ymax = mean_PSMs + sd_PSMs),
+    position = position_dodge(0.7), width = 0.2
+  ) +
+  geom_point(
+    data = data_filtered, aes(x = sample_type, y = PSMs, color = Tool),
+    position = position_jitterdodge(jitter.width = 0.3, dodge.width = 0.7), 
+    size = 0.3, alpha = 1
+  ) +
+  labs(
+    y = "# PSMs at 1% FDR",
+    x = "",
+    fill = "Tool",
+    color = "Tool"
+  ) +
+  theme_minimal() +
+  scale_fill_manual(values = tool_colors) +
+  scale_color_manual(values = tool_colors) +
+  theme(
+    legend.position = "none",
+    panel.grid = element_blank(),
+    axis.line = element_line(color = "black"),
+    axis.ticks = element_line(color = "black"),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    axis.title.y = element_text(size = 10)
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 10000, by = 2000),
+    labels = c("0", "2000", "4000", "6000", "8000", "10000"),
+    limits = c(0, 10000),
+    expand = c(0, 0)
+  )  
 
 # Save the plot
 ggsave(filename = "C:\\DDA-BERT\\DDA-BERT_0105\\main_figure\\fig5_trace_sample_PSMs_barplot_with_points.pdf", 
@@ -142,6 +143,9 @@ tool_colors <- c(
 data_summary_stats <- data_summary_stats %>%
   mutate(Tool = factor(Tool, levels = names(tool_colors)))
 
+data_summary_stats$Tool <- factor(data_summary_stats$Tool, levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
+data_filtered$Tool <- factor(data_filtered$Tool, levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
+
 ggplot(data_summary_stats, aes(x = sample_type, y = mean_PSMs, fill = Tool)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_errorbar(
@@ -151,7 +155,7 @@ ggplot(data_summary_stats, aes(x = sample_type, y = mean_PSMs, fill = Tool)) +
   geom_point(
     data = data_filtered, aes(x = sample_type, y = PSMs, color = Tool),
     position = position_jitterdodge(jitter.width = 0.3, dodge.width = 0.7), 
-    size = 2, alpha = 1
+    size = 0.3, alpha = 1
   ) +
   labs(
     y = "# peptides at 1% FDR",
@@ -289,7 +293,7 @@ ggsave("C:\\DDA-BERT\\DDA-BERT_0105\\main_figure\\fig5_single_cell_PSMs_barplot.
 
 ##4.Figure5D
 rm(list=ls())
-df <- read_excel("C:\\DDA-BERT\\DDA-BERT_0105\\main_figure\\DDA-BERT_Figures_0105_ajun.xlsx", sheet = 4)
+df <- read_excel("C:\\DDA-BERT\\DDA-BERT_0105\\main_figure\\DDA-BERT_Figures_0105.xlsx", sheet = 4)
 
 df_long <- df %>%
   pivot_longer(

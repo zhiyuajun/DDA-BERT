@@ -55,7 +55,7 @@ read_and_assign_cells <- function(directory, pattern, cleaned_sequence_col) {
   combined_df <- bind_rows(combined_data)
   return(combined_df)
 }
-#MS2Rescore
+
 process_multiple_directories <- function() {
   dirs <- list(
     sage = "C:\\DDA-BERT_0105\\protein_peptide_match\\sage",
@@ -78,6 +78,14 @@ process_multiple_directories <- function() {
 
 final_combined_data <- process_multiple_directories()
 
+final_combined_data$source <- recode(final_combined_data$source,
+                                     "alphapept" = "AlphaPept",
+                                     "fp" = "FragPipe (MSBooster)",
+                                     "ms2rescore" = "MS2Rescore",
+                                     "msgpt" = "DDA-BERT",
+                                     "pepdeep" = "AlphaPeptDeep",
+                                     "sage" = "Sage")
+
 # Group & summarize
 grouped_data <- final_combined_data %>%
   group_by(class, file, source) %>%
@@ -99,38 +107,46 @@ class_source_stats <- grouped_data_with_counts %>%
     .groups = 'drop'
   )
 
-class_source_stats$source <- factor(class_source_stats$source, levels = c("alphapept", "pepdeep", "ms2rescore", "sage", "fp", "msgpt"))
+class_source_stats$source <- factor(class_source_stats$source, levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
 class_source_stats$class <- factor(class_source_stats$class, levels = c("1", "2", "3-5", "6-10", ">10"))
+grouped_data_with_counts$source <- factor(grouped_data_with_counts$source, 
+                                         levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
+class_source_stats$source <- factor(class_source_stats$source, 
+                                   levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
 
-# Plot
+tool_colors <- c( 
+  "AlphaPept" = "#7A1A24",
+  "MS2Rescore" = "#4575B4",
+  "Sage" = "#762A83",
+  "AlphaPeptDeep" = "#FDAE61",
+  "FragPipe (MSBooster)" = "#1A9850",
+  "DDA-BERT" = "#D73027"
+)
+
 ggplot(class_source_stats, aes(x = class, y = mean_count, fill = source)) +
-  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.7) +
   geom_errorbar(aes(ymin = mean_count - sd_count, ymax = mean_count + sd_count), 
-                position = position_dodge(0.7), width = 0.2) +
-  scale_fill_manual(values = c(
-    "alphapept" = "#7A1A24",
-    "ms2rescore" = "#4575B4",
-    "sage" = "#762A83",
-    "pepdeep" = "#FDAE61",
-    "fp" = "#1A9850",
-    "msgpt" = "#D73027"
-  )) +
-  labs(x = "# peptides per protein group", y = "# protein groups") +
+                position = position_dodge(width = 0.7), width = 0.2) +
+  geom_point(data = grouped_data_with_counts, 
+             aes(x = class, y = count, fill = source, color = source),
+             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.7), 
+             size = 0.3, alpha = 1, 
+             show.legend = FALSE) +
+  scale_fill_manual(values = tool_colors) +
+  scale_color_manual(values = tool_colors) +
+  labs(x = "# peptides per protein group", y = "# protein groups", fill = "source") +
   theme_minimal() +
   theme(
     legend.position = "top",
-    legend.text = element_text(size = 8),
-    legend.title = element_blank(),
-    legend.key.size = unit(0.6, "lines"),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9),
     panel.grid = element_blank(), 
     axis.line = element_line(color = "black"),
-    axis.ticks = element_line(color = "black"),
-    axis.text.y = element_text(size = 10),
-    axis.title.y = element_text(size = 10)
+    axis.ticks = element_line(color = "black")
   ) +
   scale_y_continuous(
     breaks = seq(0, 1800, by = 300), 
-    labels = c("0","300", "600", "900", "1200", "1300","1800"), 
+    labels = c("0","300", "600", "900", "1200", "1500","1800"), 
     limits = c(0, 1800),
     expand = c(0, 0)
   )
@@ -142,6 +158,7 @@ ggsave(filename = "C:\\DDA-BERT_0105\\suppl_figure\\SFigure4_human_protein_pepti
        width = 3,
        height = 3, 
        units = "in")
+
 
 ##SFigure4: fruit_fly protein_peptide_match
 library(tidyverse)
@@ -223,6 +240,14 @@ process_multiple_directories <- function() {
 
 final_combined_data <- process_multiple_directories()
 
+final_combined_data$source <- recode(final_combined_data$source,
+                                     "alphapept" = "AlphaPept",
+                                     "fp" = "FragPipe (MSBooster)",
+                                     "ms2rescore" = "MS2Rescore",
+                                     "msgpt" = "DDA-BERT",
+                                     "pepdeep" = "AlphaPeptDeep",
+                                     "sage" = "Sage")
+
 # Group & summarize
 grouped_data <- final_combined_data %>%
   group_by(class, file, source) %>%
@@ -244,38 +269,46 @@ class_source_stats <- grouped_data_with_counts %>%
     .groups = 'drop'
   )
 
-class_source_stats$source <- factor(class_source_stats$source, levels = c("alphapept", "pepdeep", "ms2rescore", "sage", "fp", "msgpt"))
+class_source_stats$source <- factor(class_source_stats$source, levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
 class_source_stats$class <- factor(class_source_stats$class, levels = c("1", "2", "3-5", "6-10", ">10"))
+grouped_data_with_counts$source <- factor(grouped_data_with_counts$source, 
+                                         levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
+class_source_stats$source <- factor(class_source_stats$source, 
+                                   levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
 
-# Plot
+tool_colors <- c( 
+  "AlphaPept" = "#7A1A24",
+  "MS2Rescore" = "#4575B4",
+  "Sage" = "#762A83",
+  "AlphaPeptDeep" = "#FDAE61",
+  "FragPipe (MSBooster)" = "#1A9850",
+  "DDA-BERT" = "#D73027"
+)
+
 ggplot(class_source_stats, aes(x = class, y = mean_count, fill = source)) +
-  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.7) +
   geom_errorbar(aes(ymin = mean_count - sd_count, ymax = mean_count + sd_count), 
-                position = position_dodge(0.7), width = 0.2) +
-  scale_fill_manual(values = c(
-    "alphapept" = "#7A1A24",
-    "pepdeep" = "#FDAE61",
-    "sage" = "#762A83",
-    "fp" = "#1A9850",
-    "ms2rescore" = "#4575B4",
-    "msgpt" = "#D73027"
-  )) +
-  labs(x = "# peptides per protein group", y = "# protein groups") +
+                position = position_dodge(width = 0.7), width = 0.2) +
+  geom_point(data = grouped_data_with_counts, 
+             aes(x = class, y = count, fill = source, color = source),
+             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.7), 
+             size = 0.3, alpha = 1, 
+             show.legend = FALSE) +
+  scale_fill_manual(values = tool_colors) +
+  scale_color_manual(values = tool_colors) +
+  labs(x = "# peptides per protein group", y = "# protein groups", fill = "source") +
   theme_minimal() +
   theme(
     legend.position = "top",
-    legend.text = element_text(size = 8),
-    legend.title = element_blank(),
-    legend.key.size = unit(0.6, "lines"),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9),
     panel.grid = element_blank(), 
     axis.line = element_line(color = "black"),
-    axis.ticks = element_line(color = "black"),
-    axis.text.y = element_text(size = 10),
-    axis.title.y = element_text(size = 10)
+    axis.ticks = element_line(color = "black")
   ) +
   scale_y_continuous(
     breaks = seq(0, 420, by = 70), 
-    labels = c("0","70", "140", "210", "280","350","420"), 
+    labels = c("0","70", "140", "210", "280", "350","420"), 
     limits = c(0, 420),
     expand = c(0, 0)
   )
@@ -367,6 +400,14 @@ process_multiple_directories <- function() {
 
 final_combined_data <- process_multiple_directories()
 
+final_combined_data$source <- recode(final_combined_data$source,
+                                     "alphapept" = "AlphaPept",
+                                     "fp" = "FragPipe (MSBooster)",
+                                     "ms2rescore" = "MS2Rescore",
+                                     "msgpt" = "DDA-BERT",
+                                     "pepdeep" = "AlphaPeptDeep",
+                                     "sage" = "Sage")
+
 # Group & summarize
 grouped_data <- final_combined_data %>%
   group_by(class, file, source) %>%
@@ -388,34 +429,42 @@ class_source_stats <- grouped_data_with_counts %>%
     .groups = 'drop'
   )
 
-class_source_stats$source <- factor(class_source_stats$source, levels = c("alphapept", "pepdeep", "ms2rescore", "sage", "fp", "msgpt"))
+class_source_stats$source <- factor(class_source_stats$source, levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
 class_source_stats$class <- factor(class_source_stats$class, levels = c("1", "2", "3-5", "6-10", ">10"))
+grouped_data_with_counts$source <- factor(grouped_data_with_counts$source, 
+                                         levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
+class_source_stats$source <- factor(class_source_stats$source, 
+                                   levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
 
-# Plot
+tool_colors <- c( 
+  "AlphaPept" = "#7A1A24",
+  "MS2Rescore" = "#4575B4",
+  "Sage" = "#762A83",
+  "AlphaPeptDeep" = "#FDAE61",
+  "FragPipe (MSBooster)" = "#1A9850",
+  "DDA-BERT" = "#D73027"
+)
+
 ggplot(class_source_stats, aes(x = class, y = mean_count, fill = source)) +
-  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.7) +
   geom_errorbar(aes(ymin = mean_count - sd_count, ymax = mean_count + sd_count), 
-                position = position_dodge(0.7), width = 0.2) +
-  scale_fill_manual(values = c(
-    "alphapept" = "#7A1A24",
-    "pepdeep" = "#FDAE61",
-    "sage" = "#762A83",
-    "fp" = "#1A9850",
-    "ms2rescore" = "#4575B4",
-    "msgpt" = "#D73027"
-  )) +
-  labs(x = "# peptides per protein group", y = "# protein groups") +
+                position = position_dodge(width = 0.7), width = 0.2) +
+  geom_point(data = grouped_data_with_counts, 
+             aes(x = class, y = count, fill = source, color = source),
+             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.7), 
+             size = 0.3, alpha = 1, 
+             show.legend = FALSE) +
+  scale_fill_manual(values = tool_colors) +
+  scale_color_manual(values = tool_colors) +
+  labs(x = "# peptides per protein group", y = "# protein groups", fill = "source") +
   theme_minimal() +
   theme(
     legend.position = "top",
-    legend.text = element_text(size = 8),
-    legend.title = element_blank(),
-    legend.key.size = unit(0.6, "lines"),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9),
     panel.grid = element_blank(), 
     axis.line = element_line(color = "black"),
-    axis.ticks = element_line(color = "black"),
-    axis.text.y = element_text(size = 10),
-    axis.title.y = element_text(size = 10)
+    axis.ticks = element_line(color = "black")
   ) +
   scale_y_continuous(
     breaks = seq(0, 2100, by = 700), 
@@ -423,6 +472,7 @@ ggplot(class_source_stats, aes(x = class, y = mean_count, fill = source)) +
     limits = c(0, 2100),
     expand = c(0, 0)
   )
+
 
 ggsave(filename = "C:\\DDA-BERT_0105\\suppl_figure\\SFigure4_Arabidopsis_protein_peptide_match.pdf", 
        plot = last_plot(),
@@ -512,6 +562,14 @@ process_multiple_directories <- function() {
 
 final_combined_data <- process_multiple_directories()
 
+final_combined_data$source <- recode(final_combined_data$source,
+                                     "alphapept" = "AlphaPept",
+                                     "fp" = "FragPipe (MSBooster)",
+                                     "ms2rescore" = "MS2Rescore",
+                                     "msgpt" = "DDA-BERT",
+                                     "pepdeep" = "AlphaPeptDeep",
+                                     "sage" = "Sage")
+
 # Group & summarize
 grouped_data <- final_combined_data %>%
   group_by(class, file, source) %>%
@@ -533,34 +591,42 @@ class_source_stats <- grouped_data_with_counts %>%
     .groups = 'drop'
   )
 
-class_source_stats$source <- factor(class_source_stats$source, levels = c("alphapept", "pepdeep", "ms2rescore", "sage", "fp", "msgpt"))
+class_source_stats$source <- factor(class_source_stats$source, levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
 class_source_stats$class <- factor(class_source_stats$class, levels = c("1", "2", "3-5", "6-10", ">10"))
+grouped_data_with_counts$source <- factor(grouped_data_with_counts$source, 
+                                         levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
+class_source_stats$source <- factor(class_source_stats$source, 
+                                   levels = c("AlphaPept", "AlphaPeptDeep", "MS2Rescore", "Sage", "FragPipe (MSBooster)", "DDA-BERT"))
 
-# Plot
+tool_colors <- c( 
+  "AlphaPept" = "#7A1A24",
+  "MS2Rescore" = "#4575B4",
+  "Sage" = "#762A83",
+  "AlphaPeptDeep" = "#FDAE61",
+  "FragPipe (MSBooster)" = "#1A9850",
+  "DDA-BERT" = "#D73027"
+)
+
 ggplot(class_source_stats, aes(x = class, y = mean_count, fill = source)) +
-  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.7) +
   geom_errorbar(aes(ymin = mean_count - sd_count, ymax = mean_count + sd_count), 
-                position = position_dodge(0.7), width = 0.2) +
-  scale_fill_manual(values = c(
-    "alphapept" = "#7A1A24",
-    "pepdeep" = "#FDAE61",
-    "sage" = "#762A83",
-    "fp" = "#1A9850",
-    "ms2rescore" = "#4575B4",
-    "msgpt" = "#D73027"
-  )) +
-  labs(x = "# peptides per protein group", y = "# protein groups") +
+                position = position_dodge(width = 0.7), width = 0.2) +
+  geom_point(data = grouped_data_with_counts, 
+             aes(x = class, y = count, fill = source, color = source),
+             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.7), 
+             size = 0.3, alpha = 1, 
+             show.legend = FALSE) +
+  scale_fill_manual(values = tool_colors) +
+  scale_color_manual(values = tool_colors) +
+  labs(x = "# peptides per protein group", y = "# protein groups", fill = "source") +
   theme_minimal() +
   theme(
     legend.position = "top",
-    legend.text = element_text(size = 8),
-    legend.title = element_blank(),
-    legend.key.size = unit(0.6, "lines"),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9),
     panel.grid = element_blank(), 
     axis.line = element_line(color = "black"),
-    axis.ticks = element_line(color = "black"),
-    axis.text.y = element_text(size = 10),
-    axis.title.y = element_text(size = 10)
+    axis.ticks = element_line(color = "black")
   ) +
   scale_y_continuous(
     breaks = seq(0, 1000, by = 200), 
@@ -568,6 +634,7 @@ ggplot(class_source_stats, aes(x = class, y = mean_count, fill = source)) +
     limits = c(0, 1000),
     expand = c(0, 0)
   )
+
 
 ggsave(filename = "C:\\DDA-BERT_0105\\suppl_figure\\SFigure4_yeast_protein_peptide_match.pdf", 
        plot = last_plot(),
