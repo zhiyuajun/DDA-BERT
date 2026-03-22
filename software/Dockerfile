@@ -33,4 +33,4 @@ RUN uv pip install -e . --refresh
 ENV PATH="/app/.venv/bin:$PATH"
 
 ENTRYPOINT ["python", "-m", "dda_bert.cli"]
-CMD ["--help"]
+CMD ["--help"] 
