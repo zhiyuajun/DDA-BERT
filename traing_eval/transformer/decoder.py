@@ -7,7 +7,7 @@ from typing import Tuple, List
 
 import torch
 from torch import nn
-
+from torch import Tensor
 
 class NLinearMemoryEfficient(nn.Module):
     """Memory efficient implementation of parallel linear layers"""
