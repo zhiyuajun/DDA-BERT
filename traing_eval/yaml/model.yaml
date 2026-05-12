@@ -49,7 +49,6 @@ residues:
 n_log: 1
 # input params
 train_path: '/traing_eval/train/'
-#valid_path: '/DDA_BERT/val/'
 init_model_path: ''
 
 # out params
@@ -68,10 +67,25 @@ seed: 123
 # Training/inference options
 train_batch_size: 256 # the batch size of train phase
 predict_batch_size: 1024 # the batch size of val phase
-buffer_size: 2 # 2000 # the buffer size of cistern
+min_pkl_size: 131072 # the file size of each pkl
 train_step_ratio: 0.9 # tensorboard monitor ratio of train phase
 val_step_ratio: 0.8 # tensorboard monitor ratio of val phase
 
 logger:
 epochs: 40
 
+# data augmentation options
+mlm_sample_ratio: 0.9       # 90% of samples participate in MLM
+token_mask_ratio: 0.2       # 20% of tokens are masked
+mlm_max_chunks: 3           # Maximum of 3 chunks
+spectrum_topk: 300          # Top-K peaks by intensity are selected
+spectrum_frac_shuffle: 0.7  # Fraction of selected top-K spectrum peaks to shuffle
+spectrum_num_shuffle: 3     # Number of shuffle rounds for selected top-K spectrum peaks
+spectrum_mask_ratio: 0.9    # 90% of samples have their spectra masked, excluding samples with label=0 and weight=1
+spectrum_drop_ratio: 0.1    # 10% of peaks are dropped, excluding samples with label=0 and weight=1
+spectrum_augment: false     # Whether to apply random spectrum augmentation: mz * (0.999, 1.001), intensity * (0.95, 1.05)
+
+# loss options
+dda_loss_weight: 1.0
+mlm_loss_weight: 1.0
+label_smoothing: 0.0
