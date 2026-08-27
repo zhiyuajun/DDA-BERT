@@ -35,22 +35,97 @@ It is strongly recommended to install DDA-BERT in an isolated Conda environment.
 You can download FragPipe from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SOFTWARE/DDA-BERT/FragPipe22_0.zip) with the following core components.
 
 
-#### Step 2. Clone the DDA-BERT repository and set up an isolated Conda environment:
+#### Step 2. Clone the DDA-BERT repository and set up an isolated Conda environment
 
-```shell
+Clone the DDA-BERT repository:
+
+```bash
 git clone https://github.com/guomics-lab/DDA-BERT.git
-cd software
+cd DDA-BERT
 ```
 
-```shell
+Create and activate a Conda environment:
+
+```bash
 conda create -n DDA-BERT python=3.10
 conda activate DDA-BERT
 ```
 
-```shell
+#### Step 3. Download the required external files
+
+Some large files required by DDA-BERT are distributed separately through Google Drive and are not included in the GitHub repository.
+
+##### 3.1 Download the Sage search engine
+
+Download the **entire `sage` folder** from Google Drive:
+
+**[Download Sage from Google Drive] https://drive.google.com/drive/folders/1XRbXfXTN4ohlhxbCkk_qdAsLoy5ofITi?usp=drive_link**
+
+Place the downloaded `sage` folder under:
+
+```text
+DDA-BERT/software/
+```
+
+The resulting directory structure should look like:
+
+```text
+DDA-BERT/
+└── software/
+    ├── sage/
+    │   └── ...
+    └── ...
+```
+
+If necessary, grant execution permission to the Sage executable:
+
+```bash
+chmod +x software/sage/sage
+```
+
+##### 3.2 Download the pretrained model
+
+Download the pretrained DDA-BERT model from Google Drive:
+
+**[Download pretrained model from Google Drive] https://drive.google.com/drive/folders/1RIF3EEb0YFouXzaIpznpxoj6SpaIpMOI?usp=sharing**
+
+Place the downloaded model file:
+
+```text
+mp_rank_00_model_states.pt
+```
+
+under:
+
+```text
+DDA-BERT/software/resource/model/
+```
+
+The resulting directory structure should be:
+
+```text
+DDA-BERT/
+└── software/
+    ├── sage/
+    │   └── ...
+    └── resource/
+        └── model/
+            └── mp_rank_00_model_states.pt
+```
+
+Please make sure that both the Sage executable and the pretrained model are placed in the correct locations before running DDA-BERT.
+
+#### Step 4. Install DDA-BERT
+
+Install the required Python dependencies:
+
+```bash
+cd software
+
 pip install uv
 uv pip install -e . --refresh
 ```
+
 
 #### Running DDA-BERT
 
