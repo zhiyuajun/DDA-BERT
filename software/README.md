@@ -59,7 +59,7 @@ Some large files required by DDA-BERT are distributed separately through Google 
 
 Download the **entire `sage` folder** from Google Drive:
 
-**[Download Sage from Google Drive] https://drive.google.com/drive/folders/1XRbXfXTN4ohlhxbCkk_qdAsLoy5ofITi?usp=drive_link**
+**https://drive.google.com/drive/folders/1XRbXfXTN4ohlhxbCkk_qdAsLoy5ofITi?usp=drive_link**
 
 Place the downloaded `sage` folder under:
 
@@ -73,8 +73,7 @@ The resulting directory structure should look like:
 DDA-BERT/
 └── software/
     ├── sage/
-    │   └── ...
-    └── ...
+        └── ...
 ```
 
 If necessary, grant execution permission to the Sage executable:
@@ -87,7 +86,7 @@ chmod +x software/sage/sage
 
 Download the pretrained DDA-BERT model from Google Drive:
 
-**[Download pretrained model from Google Drive] https://drive.google.com/drive/folders/1RIF3EEb0YFouXzaIpznpxoj6SpaIpMOI?usp=sharing**
+**https://drive.google.com/drive/folders/1RIF3EEb0YFouXzaIpznpxoj6SpaIpMOI?usp=sharing**
 
 Place the downloaded model file:
 
