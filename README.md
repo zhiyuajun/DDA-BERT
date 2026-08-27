@@ -33,13 +33,14 @@ This repository is organized into the following main directories, each serving a
 
 ## Evaluation
 
-The demo_data files are now provided separately via Google Drive (https://drive.google.com/drive/folders/1t1AQegQbfiPzjTNqPNaRXHX06K7IUA3h?usp=sharing). These datasets can be used to quickly validate the software and reproduce the complete analysis workflow. Additional demo datasets in other formats are also available from Google Drive: https://drive.google.com/drive/folders/1pDxTuFYKoy-uJmq1QS7mWBuz6pkVh3jN.
-
 Evaluation typically completes in ~20 minutes, depending on the number of spectra and available GPU/CPU resources.
 
 **For the provided test data, the complete workflow, including database search, PSM rescoring, and protein inference, takes approximately 17.5 minutes on a single NVIDIA A100 (40GB) GPU with 20 CPU cores (AMD EPYC 7742 64-Core Processor).**
 
 Currently, the tool supports input data in `.mzML` and `Bruker .d` formats. `Sciex .wiff` files are not directly supported and must be converted to .mzML prior to analysis. The source code is openly available and modifiable (see the license for details), allowing users to extend the tool to accommodate additional data formats if needed.
+
+The demo_data files are now provided separately via Google Drive (https://drive.google.com/drive/folders/1t1AQegQbfiPzjTNqPNaRXHX06K7IUA3h?usp=sharing). These datasets can be used to quickly validate the software and reproduce the complete analysis workflow. Additional demo datasets in other formats are also available from Google Drive: https://drive.google.com/drive/folders/1pDxTuFYKoy-uJmq1QS7mWBuz6pkVh3jN.
+
 
 ## Results
 Benchmarking results comparing DDA-BERT with other tools, along with the corresponding FASTA files, trained models, and database search configuration files, are available at: https://drive.google.com/drive/folders/1pDxTuFYKoy-uJmq1QS7mWBuz6pkVh3jN
