@@ -28,7 +28,7 @@ Before training or evaluating DDA-BERT, download the pretrained model and exampl
 
 Download the pretrained DDA-BERT model from Google Drive:
 
-**[Download pretrained model] https://drive.google.com/drive/folders/1RIF3EEb0YFouXzaIpznpxoj6SpaIpMOI?usp=drive_link**
+**https://drive.google.com/drive/folders/1RIF3EEb0YFouXzaIpznpxoj6SpaIpMOI?usp=drive_link**
 
 Place the downloaded model file:
 
@@ -52,7 +52,7 @@ The expected path is:
 
 Download the example training files from Google Drive:
 
-**[Download example training data] https://drive.google.com/drive/folders/1C1tQX9E8p0slFzZcjmU8SAR-9DPGHSPV?usp=sharing**
+**https://drive.google.com/drive/folders/1C1tQX9E8p0slFzZcjmU8SAR-9DPGHSPV?usp=sharing**
 
 Place the downloaded training files in:
 
